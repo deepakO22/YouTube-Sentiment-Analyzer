@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youtube Sentiment Analysis Pro</title>
+    <link rel="stylesheet" href="style/app.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.4.0/dist/tf.min.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h1>Youtube Insight AI</h1>
+                <p class="subtitle" style="margin-bottom: 0; text-align: left;">Advanced Multilingual Sentiment Analysis
+                </p>
+            </div>
+
+            <!-- Toggle Switch -->
+            <label class="theme-switch">
+                <input type="checkbox" id="theme-toggle-checkbox">
+                <span class="slider round"></span>
+                <!-- Moved icons outside slider span if needed, or adjust CSS selectors. 
+                     The CSS used `input:checked ~ .icon-sun`. 
+                     This requires icons to be siblings of input. -->
+                <span class="icon-sun"><i class="fas fa-sun"></i></span>
+                <span class="icon-moon"><i class="fas fa-moon"></i></span>
+            </label>
+        </header>
+
+        <!-- Search Section -->
+        <section class="glass-card">
+            <div class="search-wrapper">
+                <div class="input-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Paste Video Link, ID, or Type to Search...">
+                    <!-- Suggestions Dropdown -->
+                    <div id="search-suggestions" class="suggestions-dropdown hidden"></div>
+                </div>
+                <button class="analyze-btn">Analyze</button>
+            </div>
+
+            <div id="error-message"
+                style="color: var(--negative); text-align: center; display: none; margin-top: 1rem;"></div>
+
+            <div id="spinner" class="spinner" style="display: none;"></div>
+        </section>
+
+        <!-- Video Details -->
+        <section class="glass-card video-grid hidden">
+            <div class="video-thumbnail">
+                <a id="thumb-link" href="#" target="_blank">
+                    <img id="thumb" src="" alt="Thumbnail">
+                </a>
+            </div>
+            <div class="video-info">
+                <a id="video-link" href="#" target="_blank" class="video-title-link">
+                    <h2>Video Title <i class="fas fa-external-link-alt"
+                            style="font-size: 0.8rem; margin-left: 0.5rem; opacity: 0.7;"></i></h2>
+                </a>
+                <span class="channel-name">Channel Name</span>
+
+                <div class="stats-row">
+                    <div class="stat-item"><i class="fas fa-eye"></i> <span id="stat-views">0</span></div>
+                    <div class="stat-item"><i class="fas fa-thumbs-up"></i> <span id="stat-likes">0</span></div>
+                    <div class="stat-item"><i class="fas fa-comment"></i> <span id="stat-comments">0</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analysis Results -->
+        <div class="video-grid">
+            <!-- Left: Sentiment Chart -->
+            <section class="glass-card chart-container hidden">
+                <div style="width: 100%;">
+                    <!-- Added Pie Chart Canvas -->
+                    <div style="width: 200px; height: 200px; margin: 0 auto 1.5rem auto;">
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+
+                    <h3 class="text-center">Sentiment Overview</h3>
+                    <div class="sentiment-bars">
+                        <div class="bar-wrapper">
+                            <span class="bar-label">Positive</span>
+                            <div class="bar-bg">
+                                <div class="bar-fill positive" style="width: 0%"></div>
+                            </div>
+                            <span class="label-positive">0</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <span class="bar-label">Neutral</span>
+                            <div class="bar-bg">
+                                <div class="bar-fill neutral" style="width: 0%"></div>
+                            </div>
+                            <span class="label-neutral">0</span>
+                        </div>
+                        <div class="bar-wrapper">
+                            <span class="bar-label">Negative</span>
+                            <div class="bar-bg">
+                                <div class="bar-fill negative" style="width: 0%"></div>
+                            </div>
+                            <span class="label-negative">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right: Comments Feed -->
+            <section id="comments-section" class="glass-card hidden">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="list-positive">Positive</button>
+                    <button class="tab-btn" data-tab="list-neutral">Neutral</button>
+                    <button class="tab-btn" data-tab="list-negative">Negative</button>
+                </div>
+
+                <div id="list-positive" class="comments-list">
+                    <table class="comments-table">
+                        <thead>
+                            <tr>
+                                <th>Comments</th>
+                                <th style="width: 100px;">Sentiment Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-positive"></tbody>
+                    </table>
+                </div>
+                <div id="list-neutral" class="comments-list hidden">
+                    <table class="comments-table">
+                        <thead>
+                            <tr>
+                                <th>Comments</th>
+                                <th style="width: 100px;">Sentiment Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-neutral"></tbody>
+                    </table>
+                </div>
+                <div id="list-negative" class="comments-list hidden">
+                    <table class="comments-table">
+                        <thead>
+                            <tr>
+                                <th>Comments</th>
+                                <th style="width: 100px;">Sentiment Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-negative"></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+    </div>
+
+    <script src="js/sentiment-analysis.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
