@@ -2,7 +2,7 @@
 
 ![Project Banner](https://img.shields.io/badge/Status-Active-success)
 
-A powerful tool to analyze the sentiment of YouTube video comments using state-of-the-art AI. It fetches comments, processes them, and visualizes the public opinion as **Positive**, **Neutral**, or **Negative**.
+A powerful analytics tool designed to decode audience feedback by instantly classifying comments into positive, neutral, and negative sentiments. This tool transforms raw opinions into actionable insights, helping you understand viewer needs and learn from constructive criticism. Ultimately, it guides data-driven content decisions to better align with your community's interests.
 
 **Author**: deepakO22
 
@@ -24,8 +24,8 @@ Follow these steps to get running in minutes!
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/deepakO22/Youtube-Sentiment-Analysis.git
-cd Youtube-Sentiment-Analysis
+git clone https://github.com/deepakO22/YouTube-Sentiment-Analyzer.git
+cd YouTube-Sentiment-Analyzer
 ```
 
 ### 2. Install Dependencies
